@@ -40,6 +40,9 @@ app.use(fileUpload({
 //cors
 app.use(cors());
 
+app.get('/', (req, res)=>{
+    res.send('haha');
+})
 app.post('/testing', (req, res)=>{
     res.send(res.body);
 })
