@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import compression from "compression";
 import fileUpload from "express-fileupload";
 import cors from "cors";
+import createHTTPError from "http-errors";
 
 const app = express();
 
@@ -41,10 +42,24 @@ app.use(fileUpload({
 app.use(cors());
 
 app.get('/', (req, res)=>{
-    res.send('haha');
+    res.send("a");
 })
-app.post('/testing', (req, res)=>{
-    res.send(res.body);
+
+app.use(async(req, res, next)=>{
+    next(createHTTPError.NotFound("this route does not exist"));
+});
+
+
+// error handling
+
+app.use( async (err, req, res, next)=>{
+    res.status(err.status || 500);
+    res.send({
+        error : {
+            status: err.status ||500,
+            message: err.message
+        }
+    });
 })
 
 export default app;
