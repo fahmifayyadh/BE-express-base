@@ -7,6 +7,7 @@ import compression from "compression";
 import fileUpload from "express-fileupload";
 import cors from "cors";
 import createHTTPError from "http-errors";
+import routes from "./routes/index.js";
 
 const app = express();
 
@@ -41,17 +42,14 @@ app.use(fileUpload({
 //cors
 app.use(cors());
 
-app.get('/', (req, res)=>{
-    res.send("a");
-})
-
-app.use(async(req, res, next)=>{
-    next(createHTTPError.NotFound("this route does not exist"));
-});
+//api v1 routes
+app.use("/api/v1", routes);
 
 
 // error handling
-
+app.use(async(req, res, next)=>{
+    next(createHTTPError.NotFound("this route does not exist"));
+});
 app.use( async (err, req, res, next)=>{
     res.status(err.status || 500);
     res.send({
